@@ -5,21 +5,23 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding database...');
 
-  // 1. Create Org
+  // 1. Create Org (using fixed ID to match mock context)
   const org = await prisma.org.upsert({
-    where: { slug: 'acme-engineering' },
+    where: { id: 'org_mock_1' },
     update: {},
     create: {
+      id: 'org_mock_1',
       name: 'Acme Engineering',
       slug: 'acme-engineering',
     },
   });
 
-  // 2. Create User & Person
+  // 2. Create User & Person (using fixed ID to match mock context)
   const user = await prisma.user.upsert({
-    where: { email: 'demo@amplis.app' },
+    where: { id: 'user_mock_1' },
     update: {},
     create: {
+      id: 'user_mock_1',
       email: 'demo@amplis.app',
       name: 'Demo User',
       orgRoles: {
