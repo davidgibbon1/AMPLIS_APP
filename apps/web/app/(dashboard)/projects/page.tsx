@@ -10,7 +10,12 @@ import { useRouter } from 'next/navigation';
 export default function ProjectsPage() {
   const [search, setSearch] = useState('');
   const [showCreate, setShowCreate] = useState(false);
-  const { data: projects, isLoading, refetch } = trpc.project.list.useQuery({ search });
+  const { data: projects, isLoading, error, refetch } = trpc.project.list.useQuery({ search });
+  
+  // Debug logging
+  console.log('Projects data:', projects);
+  console.log('Is loading:', isLoading);
+  console.log('Error:', error);
   
   const createProject = trpc.project.create.useMutation({
     onSuccess: () => {
@@ -86,6 +91,11 @@ export default function ProjectsPage() {
 
       {isLoading ? (
         <div>Loading...</div>
+      ) : error ? (
+        <div className="text-red-600 p-4 border border-red-300 rounded-lg bg-red-50">
+          <p className="font-semibold">Error loading projects:</p>
+          <p className="text-sm">{error.message}</p>
+        </div>
       ) : (
         <div className="border rounded-lg overflow-hidden">
           <table className="w-full text-sm">
@@ -99,7 +109,7 @@ export default function ProjectsPage() {
               </tr>
             </thead>
             <tbody>
-              {projects?.map((project) => (
+              {Array.isArray(projects) && projects.map((project) => (
                 <tr key={project.id} className="border-b last:border-0 hover:bg-slate-50 transition-colors">
                   <td className="px-4 py-3 font-medium">
                     <Link href={`/projects/${project.id}`} className="hover:underline text-blue-600">
@@ -123,7 +133,7 @@ export default function ProjectsPage() {
                   </td>
                 </tr>
               ))}
-              {projects?.length === 0 && (
+              {Array.isArray(projects) && projects.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
                     No projects found.
