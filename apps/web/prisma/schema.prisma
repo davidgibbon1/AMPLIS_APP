@@ -1,0 +1,294 @@
+// apps/web/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  extensions = [pgvector(map: "vector")]
+}
+
+// --- Auth & Multi-tenancy ---
+
+model Org {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  users           UserOrgRole[]
+  projects        Project[]
+  people          Person[]
+  documentSources DocumentSource[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  orgRoles UserOrgRole[]
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+model UserOrgRole {
+  id        String   @id @default(cuid())
+  userId    String
+  orgId     String
+  role      Role     @default(MEMBER)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  org  Org  @relation(fields: [orgId], references: [id])
+
+  @@unique([userId, orgId])
+}
+
+// --- Project Management Domain ---
+
+enum ProjectStatus {
+  SCOPING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  ARCHIVED
+}
+
+model Project {
+  id              String        @id @default(cuid())
+  orgId           String
+  name            String
+  clientName      String?
+  description     String?
+  status          ProjectStatus @default(SCOPING)
+  startDate       DateTime?
+  endDate         DateTime?
+  currency        String        @default("USD")
+  targetMarginPct Decimal       @default(20)
+  priceTotal      Decimal? // Optional override if fixed price at project level
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  org          Org           @relation(fields: [orgId], references: [id])
+  deliverables Deliverable[]
+  allocations  Allocation[]
+  timesheets   Timesheet[]
+  invoices     Invoice[]
+  documents    DocumentSource[]
+}
+
+enum DeliverableStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  UNDER_REVIEW
+  COMPLETED
+}
+
+enum DeliverableType {
+  REPORT
+  MODEL
+  WORKSHOP
+  DASHBOARD
+  OTHER
+}
+
+enum BillingModel {
+  FIXED_FEE
+  TIME_AND_MATERIALS
+  MILESTONE
+  UNIT_PRICE
+}
+
+model Deliverable {
+  id            String            @id @default(cuid())
+  projectId     String
+  name          String
+  description   String?
+  type          DeliverableType   @default(OTHER)
+  status        DeliverableStatus @default(NOT_STARTED)
+  billingModel  BillingModel      @default(FIXED_FEE)
+  
+  // Commercials
+  priceTotal    Decimal           @default(0)
+  budgetHours   Decimal           @default(0)
+  budgetCost    Decimal           @default(0)
+  
+  // Progress / Actuals
+  percentComplete Decimal         @default(0)
+  actualHours     Decimal         @default(0)
+  actualCost      Decimal         @default(0)
+  
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  // Relations
+  project      Project       @relation(fields: [projectId], references: [id])
+  allocations  Allocation[]
+  timesheets   Timesheet[]
+  invoiceLines InvoiceLine[]
+  documents    DocumentSource[]
+}
+
+// --- Resource Management ---
+
+model Person {
+  id          String   @id @default(cuid())
+  orgId       String
+  userId      String?  // Optional link to auth user
+  name        String
+  email       String?
+  role        String?  // e.g. "Senior Engineer"
+  defaultRate Decimal  @default(0) // Cost rate
+  billRate    Decimal  @default(0) // Sell rate (if T&M)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  org         Org          @relation(fields: [orgId], references: [id])
+  allocations Allocation[]
+  timesheets  Timesheet[]
+}
+
+model Allocation {
+  id            String   @id @default(cuid())
+  projectId     String
+  deliverableId String?
+  personId      String
+  
+  startDate     DateTime
+  endDate       DateTime
+  hoursPerWeek  Decimal
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  project     Project      @relation(fields: [projectId], references: [id])
+  deliverable Deliverable? @relation(fields: [deliverableId], references: [id])
+  person      Person       @relation(fields: [personId], references: [id])
+}
+
+model Timesheet {
+  id            String   @id @default(cuid())
+  projectId     String
+  deliverableId String?
+  personId      String
+  
+  date          DateTime
+  hours         Decimal
+  notes         String?
+  costRateAtTime Decimal @default(0)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  project     Project      @relation(fields: [projectId], references: [id])
+  deliverable Deliverable? @relation(fields: [deliverableId], references: [id])
+  person      Person       @relation(fields: [personId], references: [id])
+}
+
+// --- Billing ---
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  VOID
+}
+
+model Invoice {
+  id        String        @id @default(cuid())
+  projectId String
+  number    String
+  status    InvoiceStatus @default(DRAFT)
+  issueDate DateTime
+  dueDate   DateTime
+  total     Decimal
+  
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  // Relations
+  project Project       @relation(fields: [projectId], references: [id])
+  lines   InvoiceLine[]
+}
+
+model InvoiceLine {
+  id            String  @id @default(cuid())
+  invoiceId     String
+  deliverableId String? // Can bill by deliverable
+  
+  description   String
+  amount        Decimal
+  
+  // Relations
+  invoice     Invoice      @relation(fields: [invoiceId], references: [id])
+  deliverable Deliverable? @relation(fields: [deliverableId], references: [id])
+}
+
+// --- RAG / Knowledge ---
+
+enum DocType {
+  PDF
+  PPTX
+  DOCX
+  MARKDOWN
+  EMAIL
+  MEETING_NOTES
+}
+
+model DocumentSource {
+  id            String   @id @default(cuid())
+  orgId         String
+  projectId     String?
+  deliverableId String?
+  
+  title         String
+  type          DocType
+  url           String? // S3 path or external URL
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  org         Org          @relation(fields: [orgId], references: [id])
+  project     Project?     @relation(fields: [projectId], references: [id])
+  deliverable Deliverable? @relation(fields: [deliverableId], references: [id])
+  chunks      DocumentChunk[]
+}
+
+model DocumentChunk {
+  id        String   @id @default(cuid())
+  sourceId  String
+  
+  index     Int
+  content   String
+  metadata  Json?    // Page numbers, section headers
+  embedding Unsupported("vector(1536)")?
+  
+  createdAt DateTime @default(now())
+
+  // Relations
+  source DocumentSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+}
+
+
