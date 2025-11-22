@@ -18,30 +18,43 @@ export default function LoginPage() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    console.log('📝 [CLIENT] Form submitted')
     setError(null)
     setLoading(true)
 
     const formData = new FormData(e.currentTarget)
+    const email = formData.get('email')
+    console.log('📝 [CLIENT] Email:', email)
 
     try {
+      console.log('📝 [CLIENT] Calling loginAction...')
       const result = await loginAction(formData)
+      console.log('📝 [CLIENT] Login result:', result)
 
       if (!result.success) {
+        console.error('📝 [CLIENT] ❌ Login failed:', result.error)
         setError(result.error)
         setLoading(false)
         return
       }
 
+      console.log('📝 [CLIENT] ✓ Login successful!')
+      console.log('📝 [CLIENT] Requires MFA:', result.data.requiresMfa)
+
       if (result.data.requiresMfa && result.data.factorId) {
         // Redirect to MFA verification
+        console.log('📝 [CLIENT] Redirecting to MFA verification...')
         router.push(`/auth/mfa/verify?factorId=${result.data.factorId}`)
         return
       }
 
       // Successful login without MFA
       const next = searchParams.get('next') || '/projects'
+      console.log('📝 [CLIENT] Redirecting to:', next)
       router.push(next)
     } catch (err) {
+      console.error('📝 [CLIENT] ❌ Unexpected error:', err)
+      console.error('📝 [CLIENT] Error details:', err instanceof Error ? err.message : 'Unknown error')
       setError('An unexpected error occurred')
       setLoading(false)
     }

@@ -17,24 +17,33 @@ const authRoutes = ['/auth/login', '/auth/register']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+  console.log('🛡️ [MIDDLEWARE] Request to:', pathname)
 
   // First, update the session (refresh tokens if needed)
-  const response = await updateSession(request)
+  console.log('🛡️ [MIDDLEWARE] Updating session...')
+  const { response, user } = await updateSession(request)
+  console.log('🛡️ [MIDDLEWARE] ✓ Session updated')
 
-  // Check if user is authenticated by looking at the Supabase cookies
-  const supabaseAuthToken = request.cookies.get('sb-access-token')?.value
-  const isAuthenticated = !!supabaseAuthToken
+  // Check if user is authenticated from Supabase
+  const isAuthenticated = !!user
+  console.log('🛡️ [MIDDLEWARE] Is authenticated:', isAuthenticated)
+  if (user) {
+    console.log('🛡️ [MIDDLEWARE] Authenticated user:', user.email)
+  }
 
   // Check if the current path is protected
   const isProtectedRoute = protectedRoutes.some((route) =>
     pathname.startsWith(route)
   )
+  console.log('🛡️ [MIDDLEWARE] Is protected route:', isProtectedRoute)
 
   // Check if the current path is an auth route
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
+  console.log('🛡️ [MIDDLEWARE] Is auth route:', isAuthRoute)
 
   // Redirect to login if accessing protected route without auth
   if (isProtectedRoute && !isAuthenticated) {
+    console.log('🛡️ [MIDDLEWARE] 🔀 Redirecting to login (protected route, not authenticated)')
     const url = request.nextUrl.clone()
     url.pathname = '/auth/login'
     url.searchParams.set('next', pathname)
@@ -43,11 +52,13 @@ export async function middleware(request: NextRequest) {
 
   // Redirect to app if accessing auth routes while authenticated
   if (isAuthRoute && isAuthenticated) {
+    console.log('🛡️ [MIDDLEWARE] 🔀 Redirecting to /projects (auth route, already authenticated)')
     const url = request.nextUrl.clone()
     url.pathname = '/projects'
     return NextResponse.redirect(url)
   }
 
+  console.log('🛡️ [MIDDLEWARE] ✓ Allowing request to proceed')
   return response
 }
 

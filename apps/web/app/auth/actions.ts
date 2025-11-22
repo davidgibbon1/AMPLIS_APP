@@ -99,7 +99,16 @@ export async function registerAction(formData: FormData): Promise<ActionResult<{
 
     if (error) {
       console.error('Supabase signup error:', error)
-      return { success: false, error: error.message }
+      
+      // Provide user-friendly error messages
+      if (error.message.includes('already registered') || error.message.includes('already exists')) {
+        return { success: false, error: 'An account with this email already exists. Try signing in instead.' }
+      }
+      if (error.message.includes('Password should be')) {
+        return { success: false, error: 'Password does not meet security requirements. Please use at least 12 characters with uppercase, lowercase, and a number.' }
+      }
+      
+      return { success: false, error: error.message || 'Unable to create account. Please try again.' }
     }
 
     if (!data.user) {
@@ -115,6 +124,26 @@ export async function registerAction(formData: FormData): Promise<ActionResult<{
       },
     })
 
+    // Create a default organization for the user
+    const orgName = validated.name ? `${validated.name}'s Organization` : 'My Organization'
+    const orgSlug = validated.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '-')
+    
+    const org = await prisma.org.create({
+      data: {
+        name: orgName,
+        slug: orgSlug,
+      },
+    })
+
+    // Add user as owner of the org
+    await prisma.userOrgRole.create({
+      data: {
+        userId: data.user.id,
+        orgId: org.id,
+        role: 'OWNER',
+      },
+    })
+
     // Log the user creation
     await createAuditLog({
       actorId: data.user.id,
@@ -122,6 +151,16 @@ export async function registerAction(formData: FormData): Promise<ActionResult<{
       entityType: 'user',
       entityId: data.user.id,
       metadata: { email: validated.email, name: validated.name },
+    })
+
+    // Log org creation
+    await createAuditLog({
+      actorId: data.user.id,
+      action: 'ORG_CREATED',
+      entityType: 'org',
+      entityId: org.id,
+      orgId: org.id,
+      metadata: { name: orgName, slug: orgSlug },
     })
 
     return { success: true, data: { userId: data.user.id } }
@@ -135,36 +174,65 @@ export async function registerAction(formData: FormData): Promise<ActionResult<{
 }
 
 export async function loginAction(formData: FormData): Promise<ActionResult<{ requiresMfa: boolean; factorId?: string }>> {
+  console.log('🔐 [LOGIN] Starting login action...')
   try {
     const rawData = {
       email: String(formData.get('email') ?? ''),
       password: String(formData.get('password') ?? ''),
     }
+    console.log('🔐 [LOGIN] Email:', rawData.email)
 
+    console.log('🔐 [LOGIN] Validating schema...')
     const validated = loginSchema.parse(rawData)
+    console.log('🔐 [LOGIN] ✓ Schema validated')
 
+    console.log('🔐 [LOGIN] Creating Supabase client...')
     const supabase = createClient()
+    console.log('🔐 [LOGIN] ✓ Supabase client created')
 
+    console.log('🔐 [LOGIN] Calling signInWithPassword...')
     const { data, error } = await supabase.auth.signInWithPassword({
       email: validated.email,
       password: validated.password,
     })
 
     if (error) {
-      console.error('Supabase login error:', error)
-      return { success: false, error: error.message }
+      console.error('🔐 [LOGIN] ❌ Supabase login error:', error)
+      console.error('🔐 [LOGIN] Error details:', JSON.stringify(error, null, 2))
+      
+      // Provide user-friendly error messages
+      if (error.message.includes('Invalid login credentials')) {
+        return { success: false, error: 'Invalid email or password. Please check your credentials and try again.' }
+      }
+      if (error.message.includes('Email not confirmed')) {
+        return { success: false, error: 'Please verify your email address before signing in.' }
+      }
+      if (error.message.includes('User not found')) {
+        return { success: false, error: 'No account found with this email address.' }
+      }
+      
+      return { success: false, error: error.message || 'Unable to sign in. Please try again.' }
     }
 
+    console.log('🔐 [LOGIN] ✓ Supabase authentication successful')
+    console.log('🔐 [LOGIN] User ID:', data.user?.id)
+    console.log('🔐 [LOGIN] User email:', data.user?.email)
+    console.log('🔐 [LOGIN] Session exists:', !!data.session)
+
     if (!data.user) {
+      console.error('🔐 [LOGIN] ❌ No user returned from Supabase')
       return { success: false, error: 'Login failed - no user returned' }
     }
 
     // Check if MFA is required
+    console.log('🔐 [LOGIN] Checking for MFA factors...')
     const { data: factors } = await supabase.auth.mfa.listFactors()
+    console.log('🔐 [LOGIN] MFA factors:', JSON.stringify(factors, null, 2))
     
     if (factors && factors.totp && factors.totp.length > 0) {
       // MFA is enrolled, need verification
       const factor = factors.totp[0]
+      console.log('🔐 [LOGIN] ⚠️ MFA required, factor ID:', factor.id)
       return { 
         success: true, 
         data: { 
@@ -174,12 +242,15 @@ export async function loginAction(formData: FormData): Promise<ActionResult<{ re
       }
     }
 
+    console.log('🔐 [LOGIN] ✅ Login successful (no MFA required)')
     return { success: true, data: { requiresMfa: false } }
   } catch (error) {
     if (error instanceof z.ZodError) {
+      console.error('🔐 [LOGIN] ❌ Validation error:', error.errors)
       return { success: false, error: error.errors[0].message }
     }
-    console.error('Login error:', error)
+    console.error('🔐 [LOGIN] ❌ Unexpected error:', error)
+    console.error('🔐 [LOGIN] Error stack:', error instanceof Error ? error.stack : 'No stack trace')
     return { success: false, error: 'An unexpected error occurred during login' }
   }
 }
@@ -427,4 +498,157 @@ export async function storeGoogleTokensAction(userId: string, email: string) {
     return { success: false, error: 'Failed to store OAuth tokens' }
   }
 }
+
+// Update user profile
+export async function updateProfileAction(formData: FormData): Promise<ActionResult> {
+  try {
+    const supabase = createClient()
+    
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
+      return { success: false, error: 'Not authenticated' }
+    }
+
+    const name = String(formData.get('name') ?? '').trim()
+    
+    if (!name) {
+      return { success: false, error: 'Name is required' }
+    }
+
+    // Update in database
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { name },
+    })
+
+    // Update in Supabase user metadata
+    await supabase.auth.updateUser({
+      data: { name },
+    })
+
+    await createAuditLog({
+      actorId: user.id,
+      action: 'PROFILE_UPDATED',
+      entityType: 'user',
+      entityId: user.id,
+      metadata: { name },
+    })
+
+    return { success: true, data: undefined }
+  } catch (error) {
+    console.error('Profile update error:', error)
+    return { success: false, error: 'Failed to update profile. Please try again.' }
+  }
+}
+
+// Update email
+export async function updateEmailAction(newEmail: string): Promise<ActionResult> {
+  try {
+    const supabase = createClient()
+    
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
+      return { success: false, error: 'Not authenticated' }
+    }
+
+    if (!z.string().email().safeParse(newEmail).success) {
+      return { success: false, error: 'Invalid email address' }
+    }
+
+    // Supabase will send a confirmation email to the new address
+    const { error } = await supabase.auth.updateUser({
+      email: newEmail,
+    })
+
+    if (error) {
+      console.error('Email update error:', error)
+      if (error.message.includes('already registered')) {
+        return { success: false, error: 'This email address is already in use.' }
+      }
+      return { success: false, error: error.message }
+    }
+
+    await createAuditLog({
+      actorId: user.id,
+      action: 'EMAIL_CHANGE_REQUESTED',
+      entityType: 'user',
+      entityId: user.id,
+      metadata: { oldEmail: user.email, newEmail },
+    })
+
+    return { success: true, data: undefined }
+  } catch (error) {
+    console.error('Email update error:', error)
+    return { success: false, error: 'Failed to update email. Please try again.' }
+  }
+}
+
+// Update password
+const passwordSchema = z.object({
+  currentPassword: z.string().min(1, 'Current password is required'),
+  newPassword: z
+    .string()
+    .min(12, 'Password must be at least 12 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one digit'),
+})
+
+export async function updatePasswordAction(formData: FormData): Promise<ActionResult> {
+  try {
+    const supabase = createClient()
+    
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
+      return { success: false, error: 'Not authenticated' }
+    }
+
+    const rawData = {
+      currentPassword: String(formData.get('currentPassword') ?? ''),
+      newPassword: String(formData.get('newPassword') ?? ''),
+    }
+
+    const validated = passwordSchema.parse(rawData)
+
+    // Verify current password by attempting to sign in
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: user.email!,
+      password: validated.currentPassword,
+    })
+
+    if (signInError) {
+      return { success: false, error: 'Current password is incorrect.' }
+    }
+
+    // Update to new password
+    const { error } = await supabase.auth.updateUser({
+      password: validated.newPassword,
+    })
+
+    if (error) {
+      console.error('Password update error:', error)
+      return { success: false, error: 'Failed to update password. Please try again.' }
+    }
+
+    await createAuditLog({
+      actorId: user.id,
+      action: 'PASSWORD_CHANGED',
+      entityType: 'user',
+      entityId: user.id,
+      metadata: {},
+    })
+
+    return { success: true, data: undefined }
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { success: false, error: error.errors[0].message }
+    }
+    console.error('Password update error:', error)
+    return { success: false, error: 'Failed to update password. Please try again.' }
+  }
+}
+
 
