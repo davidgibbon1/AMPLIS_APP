@@ -1,2 +1,218 @@
 2025-11-29T07:08:42.932643Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/1.cookie"), AnchoredSystemPathBuf(".turbo/cookies/.turbo-cookie")}
 2025-11-29T07:08:42.932653Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:14.835240Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.repo.ts")}
+2025-11-29T07:15:14.835279Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:21.435459Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.repo.ts")}
+2025-11-29T07:15:21.435469Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:24.134320Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.repo.ts")}
+2025-11-29T07:15:24.134328Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:24.161310Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:30.534819Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/prisma/schema.prisma")}
+2025-11-29T07:15:30.534827Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:30.562812Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:30.635956Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/prisma/schema.prisma")}
+2025-11-29T07:15:30.635966Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:30.635995Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:32.035430Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/components/providers.tsx")}
+2025-11-29T07:15:32.035440Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:32.035472Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:33.135683Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/org/org.schema.ts")}
+2025-11-29T07:15:33.135703Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:33.135813Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:34.235557Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/app/(dashboard)/admin/page.tsx")}
+2025-11-29T07:15:34.235565Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:34.235592Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:35.334826Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/app/(dashboard)/people/page.tsx")}
+2025-11-29T07:15:35.334837Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:35.334869Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:36.335579Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/org/org.service.ts")}
+2025-11-29T07:15:36.335591Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:36.349977Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:37.334642Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/trpc/routers/org.ts")}
+2025-11-29T07:15:37.334650Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:37.361377Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:37.435774Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/trpc/routers/org.ts")}
+2025-11-29T07:15:37.435785Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:37.435827Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:39.136074Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apply_org_migration.sh")}
+2025-11-29T07:15:39.136085Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:40.036200Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("ORG_LEVELS_SUMMARY.md")}
+2025-11-29T07:15:40.036209Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:41.035411Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("README_ORG_LEVELS.md")}
+2025-11-29T07:15:41.035427Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:41.835952Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("IMPLEMENTATION_CHECKLIST.md")}
+2025-11-29T07:15:41.835965Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:42.235584Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/prisma/migrations/add_org_levels_and_hierarchy.sql")}
+2025-11-29T07:15:42.235599Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:42.235633Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:42.535795Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.service.ts")}
+2025-11-29T07:15:42.535806Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:42.535844Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:42.836262Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("ORG_LEVELS_IMPLEMENTATION.md")}
+2025-11-29T07:15:42.836271Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:43.235435Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("GANTT_MODULE_IMPLEMENTATION.md")}
+2025-11-29T07:15:43.235443Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:43.535380Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("UI_PREVIEW.md")}
+2025-11-29T07:15:43.535394Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:43.935452Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("QUICKSTART_ORG_LEVELS.md")}
+2025-11-29T07:15:43.935461Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:44.234614Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/trpc/routers/task.ts")}
+2025-11-29T07:15:44.234623Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:44.262377Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:44.636025Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/trpc/routers/theme.ts")}
+2025-11-29T07:15:44.636034Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:44.636065Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:44.934862Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/trpc/routers/gantt.ts")}
+2025-11-29T07:15:44.934871Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:44.949029Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:45.337387Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/lib/gantt/utils.ts")}
+2025-11-29T07:15:45.337437Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:45.337474Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:45.636130Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/trpc/routers/resource.ts")}
+2025-11-29T07:15:45.636188Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:45.636253Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:46.035507Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/components/gantt/TaskBar.tsx")}
+2025-11-29T07:15:46.035520Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:46.035556Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:46.335724Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/lib/gantt/types.ts")}
+2025-11-29T07:15:46.335735Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:46.338640Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:46.735969Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/components/gantt/GanttToolbar.tsx")}
+2025-11-29T07:15:46.735982Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:46.736010Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:47.136028Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/components/gantt/Timeline.tsx")}
+2025-11-29T07:15:47.136038Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:47.136063Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:47.436016Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/components/gantt/GanttCanvas.tsx")}
+2025-11-29T07:15:47.436025Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:47.436097Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:47.735955Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/prisma/migrations/add_gantt_module.sql")}
+2025-11-29T07:15:47.735965Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:47.746219Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:48.134751Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/components/gantt/ResourcePanel.tsx")}
+2025-11-29T07:15:48.134760Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:48.134787Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:48.535980Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("GANTT_USER_GUIDE.md")}
+2025-11-29T07:15:48.535992Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:48.834619Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/lib/gantt/store.ts")}
+2025-11-29T07:15:48.834629Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:48.834667Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:49.236167Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/components/gantt/TaskSidebar.tsx")}
+2025-11-29T07:15:49.236177Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:49.236208Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:49.535014Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/trpc/routers/ai.ts")}
+2025-11-29T07:15:49.535077Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:49.540279Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:49.937671Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/components/gantt/ThemePanel.tsx")}
+2025-11-29T07:15:49.937683Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:49.937715Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:50.335319Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/components/gantt/TaskHistoryPanel.tsx")}
+2025-11-29T07:15:50.335327Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:50.363955Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:50.635272Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/components/gantt/AIAssistant.tsx")}
+2025-11-29T07:15:50.635286Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:50.635315Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:50.934902Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("GANTT_DEPLOYMENT_GUIDE.md")}
+2025-11-29T07:15:50.934914Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:51.334978Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/app/(dashboard)/projects/[id]/gantt/page.tsx")}
+2025-11-29T07:15:51.334987Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:51.335020Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:51.735761Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("GANTT_README.md")}
+2025-11-29T07:15:51.735771Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:52.135710Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/trpc/routers/index.ts")}
+2025-11-29T07:15:52.135725Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:52.135786Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:52.436278Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("GANTT_IMPLEMENTATION_SUMMARY.md")}
+2025-11-29T07:15:52.436290Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:52.834977Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.schema.ts")}
+2025-11-29T07:15:52.834986Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:52.835009Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:53.235265Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/app/(dashboard)/projects/[id]/page.tsx")}
+2025-11-29T07:15:53.235276Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:53.292963Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:53.635107Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/org/org.repo.ts")}
+2025-11-29T07:15:53.635116Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:53.635148Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:54.835580Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("GANTT_BUGFIX_SUMMARY.md")}
+2025-11-29T07:15:54.835590Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:15:55.135151Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/prisma/seed-projects.ts")}
+2025-11-29T07:15:55.135161Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:55.135195Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:55.535440Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/project/project.repo.ts")}
+2025-11-29T07:15:55.535449Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:55.535479Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:55.935715Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/app/api/trpc/[trpc]/route.ts")}
+2025-11-29T07:15:55.935729Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:55.935765Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:56.235342Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/prisma/add-user-to-org.ts")}
+2025-11-29T07:15:56.235353Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:56.254968Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:56.635406Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/app/(dashboard)/projects/page.tsx")}
+2025-11-29T07:15:56.635419Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:56.635448Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:57.335172Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/trpc/routers/project.ts")}
+2025-11-29T07:15:57.335182Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:15:57.335208Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:15:58.335630Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/app/(dashboard)/layout.tsx")}
+2025-11-29T07:15:58.335643Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:16:01.836105Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/app/(dashboard)/layout.tsx")}
+2025-11-29T07:16:01.836118Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:16:07.335776Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.repo.ts")}
+2025-11-29T07:16:07.335785Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:16:09.636279Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.repo.ts")}
+2025-11-29T07:16:09.636289Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:16:11.435450Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.repo.ts")}
+2025-11-29T07:16:11.435459Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:16:11.435496Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:16:18.835721Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.repo.ts")}
+2025-11-29T07:16:18.835732Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:16:44.636460Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.service.ts")}
+2025-11-29T07:16:44.636470Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:16:48.735301Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.service.ts")}
+2025-11-29T07:16:48.735311Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:17:42.936396Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/__tests__/gantt.service.test.ts"), AnchoredSystemPathBuf("apps/web/server/domain/gantt/__tests__")}
+2025-11-29T07:17:42.936406Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:17:43.036416Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/__tests__/gantt.service.test.ts")}
+2025-11-29T07:17:43.036425Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:18:17.436107Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/__tests__/gantt.service.test.ts")}
+2025-11-29T07:18:17.436122Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:18:17.436152Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:18:19.935959Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.repo.ts")}
+2025-11-29T07:18:19.935968Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:18:19.935994Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:18:22.836779Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/__tests__/gantt.repo.test.ts")}
+2025-11-29T07:18:22.836789Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:18:22.936361Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/__tests__/gantt.repo.test.ts")}
+2025-11-29T07:18:22.936370Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:18:24.337261Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.service.ts")}
+2025-11-29T07:18:24.337270Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:18:24.337298Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:18:56.337122Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/__tests__/gantt.repo.test.ts"), AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.service.ts"), AnchoredSystemPathBuf("apps/web/server/domain/gantt/gantt.repo.ts")}
+2025-11-29T07:18:56.337133Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:18:56.337171Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2025-11-29T07:19:33.238465Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(""), AnchoredSystemPathBuf("_tmp_5533_ba17221b26f6ff98e22a04df12fd64ba")}
+2025-11-29T07:19:33.238490Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:19:44.337674Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("")}
+2025-11-29T07:19:44.337694Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({}))
+2025-11-29T07:19:44.536594Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/package.json"), AnchoredSystemPathBuf("pnpm-lock.yaml.462520931"), AnchoredSystemPathBuf("apps/web/package.json.3526612272"), AnchoredSystemPathBuf("pnpm-lock.yaml")}
+2025-11-29T07:19:44.536605Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }, WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:19:52.737015Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/vitest.config.ts")}
+2025-11-29T07:19:52.737027Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:19:52.836910Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/vitest.config.ts")}
+2025-11-29T07:19:52.836919Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:19:54.936544Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/package.json")}
+2025-11-29T07:19:54.936556Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:20:13.637005Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/__tests__/gantt.repo.test.ts")}
+2025-11-29T07:20:13.637014Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:20:20.237119Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/__tests__/gantt.repo.test.ts")}
+2025-11-29T07:20:20.237128Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:20:25.136497Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/__tests__/gantt.repo.test.ts")}
+2025-11-29T07:20:25.136507Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:20:39.238085Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/server/domain/gantt/__tests__/gantt.service.test.ts")}
+2025-11-29T07:20:39.238094Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2025-11-29T07:22:25.037903Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("GANTT_BUGFIX_THEME_SETTINGS.md")}
+2025-11-29T07:22:25.037916Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:22:52.750423Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("IMPLEMENTATION_CHECKLIST.md"), AnchoredSystemPathBuf("SETUP_AUTH.md"), AnchoredSystemPathBuf("GANTT_IMPLEMENTATION_SUMMARY.md"), AnchoredSystemPathBuf("QUICKSTART_AUTH.md"), AnchoredSystemPathBuf("GANTT_BUGFIX_SUMMARY.md"), AnchoredSystemPathBuf("GANTT_DEPLOYMENT_GUIDE.md"), AnchoredSystemPathBuf("GANTT_USER_GUIDE.md"), AnchoredSystemPathBuf("README_ORG_LEVELS.md"), AnchoredSystemPathBuf("ORG_LEVELS_IMPLEMENTATION.md"), AnchoredSystemPathBuf("UI_PREVIEW.md"), AnchoredSystemPathBuf("GANTT_README.md"), AnchoredSystemPathBuf("ORG_LEVELS_SUMMARY.md"), AnchoredSystemPathBuf("AUTH_IMPLEMENTATION_SUMMARY.md"), AnchoredSystemPathBuf("QUICKSTART_ORG_LEVELS.md"), AnchoredSystemPathBuf("GANTT_MODULE_IMPLEMENTATION.md"), AnchoredSystemPathBuf("GANTT_BUGFIX_THEME_SETTINGS.md"), AnchoredSystemPathBuf("AUTH_DEBUG_CONTEXT.md")}
+2025-11-29T07:22:52.750435Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-29T07:23:06.864450Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/IMPLEMENTATION_COMPLETE.md")}
+2025-11-29T07:23:06.864460Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("web"), path: AnchoredSystemPathBuf("apps/web") }}))

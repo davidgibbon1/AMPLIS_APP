@@ -37,7 +37,7 @@ export const listTasks = async (projectId: string): Promise<TaskWithResources[]>
     costActual: task.costActual.toNumber(),
     colour: task.colour,
     sortOrder: task.sortOrder,
-    dependsOn: task.dependsOn ? JSON.parse(task.dependsOn as string) : [],
+    dependsOn: Array.isArray(task.dependsOn) ? task.dependsOn as string[] : [],
     deliverableId: task.deliverableId,
     projectId: task.projectId,
     resources: task.resources.map(r => ({
@@ -63,7 +63,7 @@ export const getTask = async (taskId: string) => {
     actualHours: task.actualHours.toNumber(),
     costEstimated: task.costEstimated.toNumber(),
     costActual: task.costActual.toNumber(),
-    dependsOn: task.dependsOn ? JSON.parse(task.dependsOn as string) : [],
+    dependsOn: Array.isArray(task.dependsOn) ? task.dependsOn as string[] : [],
     resources: task.resources.map(r => ({
       id: r.id,
       personId: r.personId,

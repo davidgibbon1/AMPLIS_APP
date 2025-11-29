@@ -71,7 +71,7 @@ export const createTask = async (data: CreateTaskInput) => {
   return prisma.task.create({
     data: {
       ...taskData,
-      dependsOn: dependsOn ? JSON.stringify(dependsOn) : null,
+      dependsOn: dependsOn ? dependsOn : undefined,
     },
     include: {
       resources: {
@@ -219,27 +219,23 @@ export const listCustomResources = async (orgId: string) => {
 
 // --- Theme Settings Repository ---
 
-export const getThemeSettings = async (orgId: string, projectId?: string) => {
+export const getThemeSettings = async (orgId: string, projectId?: string | null) => {
   // First try to get project-specific theme, then org default
   if (projectId) {
-    const projectTheme = await prisma.themeSettings.findUnique({
+    const projectTheme = await prisma.themeSettings.findFirst({
       where: {
-        orgId_projectId: {
-          orgId,
-          projectId
-        }
+        orgId,
+        projectId
       }
     });
     if (projectTheme) return projectTheme;
   }
   
   // Fall back to org default (projectId = null)
-  return prisma.themeSettings.findUnique({
+  return prisma.themeSettings.findFirst({
     where: {
-      orgId_projectId: {
-        orgId,
-        projectId: null as any
-      }
+      orgId,
+      projectId: null
     }
   });
 };
@@ -249,20 +245,30 @@ export const upsertThemeSettings = async (
   projectId: string | undefined | null,
   data: UpdateThemeSettingsInput
 ) => {
-  return prisma.themeSettings.upsert({
+  // Find existing theme
+  const existingTheme = await prisma.themeSettings.findFirst({
     where: {
-      orgId_projectId: {
-        orgId,
-        projectId: projectId || null as any
-      }
-    },
-    create: {
       orgId,
-      projectId: projectId || null,
-      ...data
-    },
-    update: data
+      projectId: projectId || null
+    }
   });
+
+  if (existingTheme) {
+    // Update existing theme
+    return prisma.themeSettings.update({
+      where: { id: existingTheme.id },
+      data
+    });
+  } else {
+    // Create new theme
+    return prisma.themeSettings.create({
+      data: {
+        orgId,
+        projectId: projectId || null,
+        ...data
+      }
+    });
+  }
 };
 
 // --- User Preferences Repository ---
@@ -317,8 +323,8 @@ export const createTaskHistory = async (
       userId,
       action,
       fieldName,
-      oldValue: oldValue ? JSON.stringify(oldValue) : null,
-      newValue: newValue ? JSON.stringify(newValue) : null
+      oldValue: oldValue !== undefined ? oldValue : undefined,
+      newValue: newValue !== undefined ? newValue : undefined
     }
   });
 };
@@ -336,20 +342,19 @@ export const getResourceCapacity = async (
     include: {
       taskResources: {
         include: {
-          task: {
-            where: {
-              AND: [
-                { startDate: { lte: endDate } },
-                { endDate: { gte: startDate } }
-              ]
-            }
-          }
+          task: true
         }
       }
     }
   });
   
-  return people;
+  // Filter task resources to only include tasks within the date range
+  return people.map(person => ({
+    ...person,
+    taskResources: person.taskResources.filter(tr => 
+      tr.task.startDate <= endDate && tr.task.endDate >= startDate
+    )
+  }));
 };
 
 export const getPersonUtilization = async (
