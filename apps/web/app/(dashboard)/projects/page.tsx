@@ -6,21 +6,45 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function ProjectsPage() {
   const [search, setSearch] = useState('');
   const [showCreate, setShowCreate] = useState(false);
-  const { data: projects, isLoading, error, refetch } = trpc.project.list.useQuery({ search });
+  const { data: rawData, isLoading, error, refetch } = trpc.project.list.useQuery({ search });
   
-  // Debug logging
-  console.log('Projects data:', projects);
+  // Handle tRPC batching format: data might be {json: [...], meta: {...}} or just [...]
+  const projects = rawData && typeof rawData === 'object' && 'json' in rawData 
+    ? rawData.json 
+    : rawData;
+  
+  // Enhanced debug logging
+  console.log('=== PROJECT PAGE DEBUG ===');
+  console.log('Raw data:', rawData);
+  console.log('Projects (processed):', projects);
+  console.log('Projects isArray:', Array.isArray(projects));
+  console.log('Projects length:', Array.isArray(projects) ? projects.length : 'N/A');
   console.log('Is loading:', isLoading);
   console.log('Error:', error);
+  console.log('========================');
   
   const createProject = trpc.project.create.useMutation({
-    onSuccess: () => {
+    onSuccess: (rawData) => {
+      console.log('✅ Create mutation success, raw data:', rawData);
+      // Unwrap tRPC batching format if present
+      const data = rawData && typeof rawData === 'object' && 'json' in rawData 
+        ? rawData.json 
+        : rawData;
+      console.log('✅ Unwrapped data:', data);
+      toast.success(`Project "${data.name}" created successfully!`);
       setShowCreate(false);
+      setNewProjectName('');
+      setNewClientName('');
       refetch();
+    },
+    onError: (error) => {
+      console.error('❌ Create mutation error:', error);
+      toast.error(`Failed to create project: ${error.message}`);
     },
   });
 
@@ -29,12 +53,16 @@ export default function ProjectsPage() {
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    createProject.mutate({
+    
+    const projectData = {
       name: newProjectName,
       clientName: newClientName || undefined,
-      status: 'SCOPING',
+      status: 'SCOPING' as const,
       deliverables: [],
-    });
+    };
+    
+    console.log('🚀 Sending project create request:', projectData);
+    createProject.mutate(projectData);
   };
 
   return (
@@ -90,11 +118,25 @@ export default function ProjectsPage() {
       </div>
 
       {isLoading ? (
-        <div>Loading...</div>
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center space-y-2">
+            <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
+            <p className="text-sm text-muted-foreground">Loading projects...</p>
+          </div>
+        </div>
       ) : error ? (
         <div className="text-red-600 p-4 border border-red-300 rounded-lg bg-red-50">
           <p className="font-semibold">Error loading projects:</p>
           <p className="text-sm">{error.message}</p>
+          <details className="mt-2 text-xs">
+            <summary className="cursor-pointer">Debug info</summary>
+            <pre className="mt-2 p-2 bg-red-100 rounded overflow-auto">{JSON.stringify(error, null, 2)}</pre>
+          </details>
+        </div>
+      ) : !projects ? (
+        <div className="p-8 text-center border border-yellow-300 rounded-lg bg-yellow-50">
+          <p className="font-semibold text-yellow-800">No data returned</p>
+          <p className="text-sm text-yellow-700">Projects data is null or undefined</p>
         </div>
       ) : (
         <div className="border rounded-lg overflow-hidden">
@@ -136,7 +178,7 @@ export default function ProjectsPage() {
               {Array.isArray(projects) && projects.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
-                    No projects found.
+                    No projects found. Click "New Project" to create one.
                   </td>
                 </tr>
               )}

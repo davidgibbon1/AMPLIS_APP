@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { Toaster } from 'sonner';
 
 export default function DashboardLayout({
   children,
@@ -25,7 +26,9 @@ export default function DashboardLayout({
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
+    <>
+      <Toaster position="top-right" richColors />
+      <div className="flex h-screen overflow-hidden bg-slate-50">
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r flex flex-col">
         <div className="h-14 flex items-center px-6 border-b font-bold text-lg">
@@ -79,6 +82,14 @@ export default function DashboardLayout({
           >
             Security
           </Link>
+          <Link 
+            href="/admin" 
+            className={`block px-4 py-2 rounded-md hover:bg-slate-100 text-slate-700 ${
+              pathname === '/admin' ? 'bg-slate-100 font-medium' : ''
+            }`}
+          >
+            Admin
+          </Link>
         </nav>
         <div className="p-4 border-t">
           {loading ? (
@@ -114,6 +125,7 @@ export default function DashboardLayout({
         </div>
       </main>
     </div>
+    </>
   );
 }
 

@@ -40,6 +40,9 @@ export const projectRouter = router({
   create: protectedProcedure
     .input(createProjectSchema)
     .mutation(async ({ ctx, input }) => {
+      console.log('📦 [PROJECT_ROUTER] create mutation called');
+      console.log('📦 [PROJECT_ROUTER] Input received:', JSON.stringify(input, null, 2));
+      console.log('📦 [PROJECT_ROUTER] Org ID:', ctx.org.id);
       return service.createProjectWithDeliverables(ctx.org.id, input);
     }),
 

@@ -52,6 +52,9 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
           <Button variant="outline" onClick={() => setIsLogTimeOpen(!isLogTimeOpen)}>
             Log Time
           </Button>
+          <Button variant="outline" onClick={() => window.location.href = `/projects/${project.id}/gantt`}>
+            Gantt View
+          </Button>
           <Button>Edit Project</Button>
         </div>
       </div>

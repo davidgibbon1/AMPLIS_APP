@@ -30,6 +30,8 @@ export const getProjectById = async (orgId: string, projectId: string) => {
 };
 
 export const listProjects = async (orgId: string, filter?: { status?: any; search?: string }) => {
+  console.log('📋 [PROJECT_REPO] listProjects called for orgId:', orgId);
+  
   const where: any = { orgId };
   
   if (filter?.status) {
@@ -51,7 +53,9 @@ export const listProjects = async (orgId: string, filter?: { status?: any; searc
     },
   });
 
-  return projects.map(p => ({
+  console.log(`📋 [PROJECT_REPO] Found ${projects.length} projects`);
+
+  const result = projects.map(p => ({
     ...p,
     targetMarginPct: p.targetMarginPct.toNumber(),
     priceTotal: p.priceTotal?.toNumber() || 0,
@@ -65,9 +69,17 @@ export const listProjects = async (orgId: string, filter?: { status?: any; searc
       actualCost: d.actualCost.toNumber(),
     })),
   }));
+  
+  console.log('📋 [PROJECT_REPO] Returning processed projects:', result.length);
+  console.log('📋 [PROJECT_REPO] First project sample:', JSON.stringify(result[0], null, 2));
+  
+  return result;
 };
 
 export const createProject = async (orgId: string, data: CreateProjectInput) => {
+  console.log('📝 [PROJECT_REPO] createProject called');
+  console.log('📝 [PROJECT_REPO] Input data:', JSON.stringify(data, null, 2));
+  
   const { deliverables, ...projectData } = data;
   
   const project = await prisma.project.create({
@@ -84,7 +96,9 @@ export const createProject = async (orgId: string, data: CreateProjectInput) => 
     include: { deliverables: true },
   });
 
-  return {
+  console.log('📝 [PROJECT_REPO] Project created, raw result:', project.id);
+
+  const result = {
     ...project,
     targetMarginPct: project.targetMarginPct.toNumber(),
     priceTotal: project.priceTotal?.toNumber() || 0,
@@ -98,6 +112,10 @@ export const createProject = async (orgId: string, data: CreateProjectInput) => 
       actualCost: d.actualCost.toNumber(),
     })),
   };
+
+  console.log('📝 [PROJECT_REPO] Returning processed result:', JSON.stringify(result, null, 2));
+  
+  return result;
 };
 
 export const updateProject = async (orgId: string, data: UpdateProjectInput) => {

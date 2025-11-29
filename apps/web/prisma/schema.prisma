@@ -24,7 +24,10 @@ model Org {
   users           UserOrgRole[]
   projects        Project[]
   people          Person[]
+  orgLevels       OrgLevel[]
   documentSources DocumentSource[]
+  customResources CustomResource[]
+  themeSettings   ThemeSettings[]
 }
 
 model User {
@@ -39,6 +42,8 @@ model User {
   orgRoles       UserOrgRole[]
   googleAccounts GoogleAccount[]
   auditLogs      AuditLog[]
+  taskHistory    TaskHistory[]
+  preferences    UserPreferences?
 }
 
 enum Role {
@@ -92,6 +97,12 @@ enum AuditAction {
   ORG_MEMBER_ADDED
   ORG_MEMBER_REMOVED
   ORG_MEMBER_ROLE_CHANGED
+  ORG_LEVEL_CREATED
+  ORG_LEVEL_UPDATED
+  ORG_LEVEL_DELETED
+  PERSON_CREATED
+  PERSON_UPDATED
+  PERSON_DELETED
   PROJECT_CREATED
   PROJECT_UPDATED
   PROJECT_DELETED
@@ -161,6 +172,8 @@ model Project {
   timesheets   Timesheet[]
   invoices     Invoice[]
   documents    DocumentSource[]
+  tasks        Task[]
+  themeSettings ThemeSettings[]
 }
 
 enum DeliverableStatus {
@@ -213,9 +226,28 @@ model Deliverable {
   timesheets   Timesheet[]
   invoiceLines InvoiceLine[]
   documents    DocumentSource[]
+  tasks        Task[]
 }
 
 // --- Resource Management ---
+
+// Organization Levels (Custom roles like "Consultant", "Senior Consultant", etc.)
+model OrgLevel {
+  id          String   @id @default(cuid())
+  orgId       String
+  name        String   // e.g. "Consultant", "Senior Consultant"
+  description String?
+  order       Int      @default(0) // For display ordering
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  org         Org      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  people      Person[]
+
+  @@unique([orgId, name])
+}
 
 model Person {
   id          String   @id @default(cuid())
@@ -223,7 +255,8 @@ model Person {
   userId      String?  // Optional link to auth user
   name        String
   email       String?
-  role        String?  // e.g. "Senior Engineer"
+  orgLevelId  String?  // Link to OrgLevel
+  managerId   String?  // Self-referencing for hierarchy
   defaultRate Decimal  @default(0) // Cost rate
   billRate    Decimal  @default(0) // Sell rate (if T&M)
 
@@ -232,8 +265,16 @@ model Person {
 
   // Relations
   org         Org          @relation(fields: [orgId], references: [id])
+  orgLevel    OrgLevel?    @relation(fields: [orgLevelId], references: [id])
+  manager     Person?      @relation("PersonHierarchy", fields: [managerId], references: [id], onDelete: SetNull)
+  reports     Person[]     @relation("PersonHierarchy")
   allocations Allocation[]
   timesheets  Timesheet[]
+  taskResources TaskResource[]
+  
+  @@index([orgId])
+  @@index([managerId])
+  @@index([orgLevelId])
 }
 
 model Allocation {
@@ -358,6 +399,169 @@ model DocumentChunk {
 
   // Relations
   source DocumentSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+}
+
+// --- Gantt Module ---
+
+enum TaskStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  BLOCKED
+  UNDER_REVIEW
+  COMPLETED
+}
+
+model Task {
+  id              String     @id @default(cuid())
+  deliverableId   String
+  projectId       String     // Denormalized for easy querying
+  
+  name            String
+  description     String?
+  status          TaskStatus @default(NOT_STARTED)
+  
+  // Scheduling
+  startDate       DateTime
+  endDate         DateTime
+  estimatedHours  Decimal    @default(0)
+  actualHours     Decimal    @default(0)
+  
+  // Costing
+  costEstimated   Decimal    @default(0)
+  costActual      Decimal    @default(0)
+  
+  // Visual
+  colour          String?    // Override theme color
+  sortOrder       Int        @default(0)
+  
+  // Dependencies (stored as JSON array of task IDs)
+  dependsOn       Json?      // Array of task IDs
+  
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  // Relations
+  deliverable     Deliverable    @relation(fields: [deliverableId], references: [id], onDelete: Cascade)
+  project         Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  resources       TaskResource[]
+  history         TaskHistory[]
+  
+  @@index([projectId])
+  @@index([deliverableId])
+}
+
+model TaskResource {
+  id              String   @id @default(cuid())
+  taskId          String
+  
+  // Can be either a Person OR a CustomResource
+  personId        String?
+  customResourceId String?
+  
+  allocatedHours  Decimal  @default(0)
+  actualHours     Decimal  @default(0)
+  hourlyRate      Decimal  @default(0) // Captured at assignment time
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  task            Task              @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  person          Person?           @relation(fields: [personId], references: [id])
+  customResource  CustomResource?   @relation(fields: [customResourceId], references: [id])
+  
+  @@index([taskId])
+  @@index([personId])
+}
+
+model CustomResource {
+  id          String   @id @default(cuid())
+  orgId       String
+  name        String
+  hourlyRate  Decimal  @default(0)
+  description String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  org         Org            @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  assignments TaskResource[]
+  
+  @@index([orgId])
+}
+
+enum TaskHistoryAction {
+  CREATED
+  UPDATED
+  DELETED
+  MOVED
+  RESIZED
+  RESOURCE_ASSIGNED
+  RESOURCE_REMOVED
+  STATUS_CHANGED
+}
+
+model TaskHistory {
+  id          String            @id @default(cuid())
+  taskId      String
+  userId      String
+  
+  action      TaskHistoryAction
+  fieldName   String?           // e.g., "startDate", "assignedResource"
+  oldValue    Json?
+  newValue    Json?
+  
+  createdAt   DateTime          @default(now())
+  
+  // Relations
+  task        Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user        User @relation(fields: [userId], references: [id])
+  
+  @@index([taskId, createdAt])
+}
+
+model ThemeSettings {
+  id                  String   @id @default(cuid())
+  projectId           String?  // If null, it's the org default
+  orgId               String
+  
+  primaryColour       String   @default("#3b82f6")
+  accentColour        String   @default("#1e40af")
+  backgroundColour    String   @default("#f8fafc")
+  backgroundImageUrl  String?
+  backgroundBlur      Int      @default(0)   // 0-100
+  backgroundDim       Int      @default(0)   // 0-100
+  
+  logoUrl             String?
+  logoOpacity         Int      @default(30)  // 5-70
+  logoPosition        String   @default("bottom-right")
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  // Relations
+  org                 Org      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  project             Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  @@unique([orgId, projectId])
+  @@index([orgId])
+  @@index([projectId])
+}
+
+model UserPreferences {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  
+  ganttZoomLevel        String   @default("week") // day, week, month, quarter
+  ganttSnapToGrid       Boolean  @default(true)
+  ganttShowDependencies Boolean  @default(false)
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  // Relations
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 
