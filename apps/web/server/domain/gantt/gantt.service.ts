@@ -11,10 +11,13 @@ import {
   UpdateCustomResourceInput,
   UpdateThemeSettingsInput,
   UpdateUserPreferencesInput,
+  CreateHighlightInput,
+  UpdateHighlightInput,
   ResourceCapacity,
   WeeklyUtilization,
   TaskWithResources,
-  GanttFullView
+  GanttFullView,
+  GanttHighlightView
 } from './gantt.schema';
 import { prisma } from '@/lib/db/client';
 import { TaskHistoryAction } from '@prisma/client';
@@ -336,6 +339,49 @@ export const updateUserPreferences = async (userId: string, data: UpdateUserPref
   return repo.upsertUserPreferences(userId, data);
 };
 
+// --- Highlight Service ---
+
+export const listHighlights = async (projectId: string): Promise<GanttHighlightView[]> => {
+  try {
+    const highlights = await repo.getHighlights(projectId);
+    
+    return highlights.map(h => ({
+      id: h.id,
+      name: h.name,
+      startDate: h.startDate,
+      endDate: h.endDate,
+      colour: h.colour,
+      opacity: h.opacity,
+      showLabel: h.showLabel,
+      labelPosition: h.labelPosition as 'top' | 'bottom'
+    }));
+  } catch (error) {
+    // Table might not exist yet if migration hasn't been run
+    console.warn('Could not fetch highlights, table may not exist:', error);
+    return [];
+  }
+};
+
+export const createHighlight = async (data: CreateHighlightInput) => {
+  return repo.createHighlight(data.projectId, {
+    name: data.name,
+    startDate: data.startDate,
+    endDate: data.endDate,
+    colour: data.colour,
+    opacity: data.opacity,
+    showLabel: data.showLabel,
+    labelPosition: data.labelPosition
+  });
+};
+
+export const updateHighlight = async (highlightId: string, data: Omit<UpdateHighlightInput, 'id'>) => {
+  return repo.updateHighlight(highlightId, data);
+};
+
+export const deleteHighlight = async (highlightId: string) => {
+  return repo.deleteHighlight(highlightId);
+};
+
 // --- Capacity & Utilization Service ---
 
 export const getResourceCapacity = async (
@@ -455,7 +501,7 @@ export const getPersonUtilization = async (
 
 export const getGanttFullView = async (orgId: string, projectId: string): Promise<GanttFullView> => {
   // Run all queries in parallel for better performance
-  const [project, tasks, theme] = await Promise.all([
+  const [project, tasks, highlights, theme] = await Promise.all([
     prisma.project.findFirst({
       where: { id: projectId, orgId },
       include: {
@@ -465,6 +511,7 @@ export const getGanttFullView = async (orgId: string, projectId: string): Promis
       }
     }),
     listTasks(projectId),
+    listHighlights(projectId),
     getThemeSettings(orgId, projectId)
   ]);
   
@@ -496,6 +543,7 @@ export const getGanttFullView = async (orgId: string, projectId: string): Promis
       percentComplete: d.percentComplete.toNumber(),
       tasks: tasksByDeliverable[d.id] || []
     })),
+    highlights,
     theme
   };
 };

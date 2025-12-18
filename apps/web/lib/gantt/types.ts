@@ -37,6 +37,7 @@ export interface GanttDeliverable {
   name: string;
   status: string;
   percentComplete: number;
+  colour?: string | null;
   tasks: GanttTask[];
 }
 
@@ -52,6 +53,17 @@ export interface GanttTheme {
   logoPosition: string;
 }
 
+export interface GanttHighlight {
+  id: string;
+  name: string;
+  startDate: Date;
+  endDate: Date;
+  colour: string;
+  opacity: number;
+  showLabel: boolean;
+  labelPosition: 'top' | 'bottom';
+}
+
 export interface GanttProject {
   id: string;
   name: string;
@@ -63,6 +75,7 @@ export interface GanttProject {
 export interface GanttData {
   project: GanttProject;
   deliverables: GanttDeliverable[];
+  highlights: GanttHighlight[];
   theme: GanttTheme;
 }
 

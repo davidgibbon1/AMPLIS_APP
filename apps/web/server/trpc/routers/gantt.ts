@@ -1,7 +1,11 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc';
 import * as service from '@/server/domain/gantt/gantt.service';
-import { updateUserPreferencesSchema } from '@/server/domain/gantt/gantt.schema';
+import { 
+  updateUserPreferencesSchema,
+  createHighlightSchema,
+  updateHighlightSchema
+} from '@/server/domain/gantt/gantt.schema';
 
 export const ganttRouter = router({
   // Get full Gantt view (project + deliverables + tasks + theme)
@@ -73,6 +77,37 @@ export const ganttRouter = router({
         url: `/share/gantt/${input.projectId}/${token}`,
         expiresAt: new Date(Date.now() + (input.expiresIn || 30) * 24 * 60 * 60 * 1000)
       };
+    }),
+
+  // --- Highlight Management ---
+  
+  // List highlights for a project
+  listHighlights: protectedProcedure
+    .input(z.object({ projectId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return service.listHighlights(input.projectId);
+    }),
+
+  // Create a new highlight
+  createHighlight: protectedProcedure
+    .input(createHighlightSchema)
+    .mutation(async ({ ctx, input }) => {
+      return service.createHighlight(input);
+    }),
+
+  // Update a highlight
+  updateHighlight: protectedProcedure
+    .input(updateHighlightSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...data } = input;
+      return service.updateHighlight(id, data);
+    }),
+
+  // Delete a highlight
+  deleteHighlight: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return service.deleteHighlight(input.id);
     }),
 });
 

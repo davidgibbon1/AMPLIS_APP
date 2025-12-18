@@ -127,6 +127,39 @@ export const updateUserPreferencesSchema = z.object({
 
 export type UpdateUserPreferencesInput = z.infer<typeof updateUserPreferencesSchema>;
 
+// --- Gantt Highlight Schemas ---
+
+export const createHighlightSchema = z.object({
+  projectId: z.string(),
+  name: z.string().min(1, "Highlight name is required"),
+  startDate: z.date(),
+  endDate: z.date(),
+  colour: z.string().default('#e5e7eb'),
+  opacity: z.number().int().min(0).max(100).default(30),
+  showLabel: z.boolean().default(true),
+  labelPosition: z.enum(['top', 'bottom']).default('bottom'),
+}).refine(
+  data => data.endDate >= data.startDate,
+  {
+    message: "End date must be after start date",
+    path: ["endDate"]
+  }
+);
+
+export const updateHighlightSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1).optional(),
+  startDate: z.date().optional(),
+  endDate: z.date().optional(),
+  colour: z.string().optional(),
+  opacity: z.number().int().min(0).max(100).optional(),
+  showLabel: z.boolean().optional(),
+  labelPosition: z.enum(['top', 'bottom']).optional(),
+});
+
+export type CreateHighlightInput = z.infer<typeof createHighlightSchema>;
+export type UpdateHighlightInput = z.infer<typeof updateHighlightSchema>;
+
 // --- Capacity & Utilization DTOs ---
 
 export interface ResourceCapacity {
@@ -181,6 +214,17 @@ export interface TaskWithResources {
   }>;
 }
 
+export interface GanttHighlightView {
+  id: string;
+  name: string;
+  startDate: Date;
+  endDate: Date;
+  colour: string;
+  opacity: number;
+  showLabel: boolean;
+  labelPosition: 'top' | 'bottom';
+}
+
 export interface GanttFullView {
   project: {
     id: string;
@@ -194,8 +238,10 @@ export interface GanttFullView {
     name: string;
     status: string;
     percentComplete: number;
+    colour?: string | null;
     tasks: TaskWithResources[];
   }>;
+  highlights: GanttHighlightView[];
   theme: {
     primaryColour: string;
     accentColour: string;

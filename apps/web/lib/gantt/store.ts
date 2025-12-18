@@ -11,6 +11,15 @@ interface GanttStore {
   timelineEnd: Date;
   setTimelineRange: (start: Date, end: Date) => void;
   
+  // Custom timeline range (user-defined start/end)
+  customTimelineStart: Date | null;
+  customTimelineEnd: Date | null;
+  setCustomTimelineRange: (start: Date | null, end: Date | null) => void;
+  
+  // Canvas height (for vertical expansion)
+  canvasMinHeight: number;
+  setCanvasMinHeight: (height: number) => void;
+  
   // Selected Tasks
   selectedTaskIds: Set<string>;
   selectTask: (taskId: string, multiSelect?: boolean) => void;
@@ -57,6 +66,15 @@ export const useGanttStore = create<GanttStore>((set) => ({
   timelineStart: new Date(),
   timelineEnd: new Date(),
   setTimelineRange: (start, end) => set({ timelineStart: start, timelineEnd: end }),
+  
+  // Custom timeline range (user-defined)
+  customTimelineStart: null,
+  customTimelineEnd: null,
+  setCustomTimelineRange: (start, end) => set({ customTimelineStart: start, customTimelineEnd: end }),
+  
+  // Canvas height
+  canvasMinHeight: 400,
+  setCanvasMinHeight: (height) => set({ canvasMinHeight: height }),
   
   // Selection
   selectedTaskIds: new Set(),

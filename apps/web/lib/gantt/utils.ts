@@ -16,6 +16,7 @@ import {
   differenceInMonths,
   format,
   isSameDay,
+  isToday,
   eachDayOfInterval,
   eachWeekOfInterval,
   eachMonthOfInterval
@@ -29,6 +30,77 @@ export const PIXELS_PER_QUARTER = 3600; // ~40 * 90
 export const ROW_HEIGHT = 48;
 export const HEADER_HEIGHT = 60;
 export const SIDEBAR_WIDTH = 400;
+
+/**
+ * Calculate the total number of days in a timeline range
+ */
+export function getTotalDays(startDate: Date, endDate: Date): number {
+  return differenceInDays(endDate, startDate) + 1;
+}
+
+/**
+ * Calculate pixels per day based on available width and timeline range
+ */
+export function calculateDynamicPixelsPerDay(
+  containerWidth: number,
+  startDate: Date,
+  endDate: Date
+): number {
+  const totalDays = getTotalDays(startDate, endDate);
+  // Ensure minimum width per day for readability
+  return Math.max(containerWidth / totalDays, 2);
+}
+
+/**
+ * Calculate X position for a date with dynamic width
+ */
+export function dateToXDynamic(
+  date: Date,
+  timelineStart: Date,
+  pixelsPerDay: number
+): number {
+  const days = differenceInDays(date, timelineStart);
+  return days * pixelsPerDay;
+}
+
+/**
+ * Calculate bar width in pixels with dynamic width
+ */
+export function calculateBarWidthDynamic(
+  startDate: Date,
+  endDate: Date,
+  pixelsPerDay: number
+): number {
+  const days = differenceInDays(endDate, startDate) + 1;
+  return Math.max(days * pixelsPerDay, 20); // Minimum 20px width
+}
+
+/**
+ * Convert X position back to date with dynamic width
+ */
+export function xToDateDynamic(
+  x: number,
+  timelineStart: Date,
+  pixelsPerDay: number
+): Date {
+  const days = Math.floor(x / pixelsPerDay);
+  return addDays(timelineStart, days);
+}
+
+/**
+ * Calculate today's X position (or -1 if not visible)
+ */
+export function getTodayXPosition(
+  timelineStart: Date,
+  timelineEnd: Date,
+  pixelsPerDay: number
+): number | null {
+  const today = startOfDay(new Date());
+  if (today < startOfDay(timelineStart) || today > startOfDay(timelineEnd)) {
+    return null;
+  }
+  return dateToXDynamic(today, timelineStart, pixelsPerDay);
+}
 
 /**
  * Get the pixel width for a given zoom level

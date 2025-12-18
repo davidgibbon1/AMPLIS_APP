@@ -346,6 +346,68 @@ export const createTaskHistory = async (
   });
 };
 
+// --- Gantt Highlights Repository ---
+
+export const getHighlights = async (projectId: string) => {
+  try {
+    // @ts-ignore - Table may not exist until migration is run
+    return await prisma.ganttHighlight.findMany({
+      where: { projectId },
+      orderBy: { startDate: 'asc' }
+    });
+  } catch (error: any) {
+    // Handle case where table doesn't exist yet
+    if (error.code === 'P2021' || error.message?.includes('does not exist')) {
+      return [];
+    }
+    throw error;
+  }
+};
+
+export const createHighlight = async (
+  projectId: string,
+  data: {
+    name: string;
+    startDate: Date;
+    endDate: Date;
+    colour?: string;
+    opacity?: number;
+    showLabel?: boolean;
+    labelPosition?: string;
+  }
+) => {
+  return prisma.ganttHighlight.create({
+    data: {
+      projectId,
+      ...data
+    }
+  });
+};
+
+export const updateHighlight = async (
+  highlightId: string,
+  data: {
+    name?: string;
+    startDate?: Date;
+    endDate?: Date;
+    colour?: string;
+    opacity?: number;
+    showLabel?: boolean;
+    labelPosition?: string;
+  }
+) => {
+  return prisma.ganttHighlight.update({
+    where: { id: highlightId },
+    data
+  });
+};
+
+export const deleteHighlight = async (highlightId: string) => {
+  return prisma.ganttHighlight.delete({
+    where: { id: highlightId }
+  });
+};
+
 // --- Capacity & Utilization Queries ---
 
 export const getResourceCapacity = async (
