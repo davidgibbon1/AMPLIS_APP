@@ -71,7 +71,7 @@ export const createTask = async (data: CreateTaskInput) => {
   return prisma.task.create({
     data: {
       ...taskData,
-      dependsOn: dependsOn ? dependsOn : undefined,
+      dependsOn: dependsOn ? JSON.stringify(dependsOn) : null,
     },
     include: {
       resources: {
@@ -219,19 +219,22 @@ export const listCustomResources = async (orgId: string) => {
 
 // --- Theme Settings Repository ---
 
-export const getThemeSettings = async (orgId: string, projectId?: string | null) => {
-  // First try to get project-specific theme, then org default
+export const getThemeSettings = async (orgId: string, projectId?: string) => {
+  // First try to get project-specific theme
   if (projectId) {
-    const projectTheme = await prisma.themeSettings.findFirst({
+    const projectTheme = await prisma.themeSettings.findUnique({
       where: {
-        orgId,
-        projectId
+        orgId_projectId: {
+          orgId,
+          projectId
+        }
       }
     });
     if (projectTheme) return projectTheme;
   }
   
   // Fall back to org default (projectId = null)
+  // Use findFirst since findUnique doesn't work with null in compound keys
   return prisma.themeSettings.findFirst({
     where: {
       orgId,
@@ -245,30 +248,44 @@ export const upsertThemeSettings = async (
   projectId: string | undefined | null,
   data: UpdateThemeSettingsInput
 ) => {
-  // Find existing theme
-  const existingTheme = await prisma.themeSettings.findFirst({
-    where: {
-      orgId,
-      projectId: projectId || null
-    }
-  });
-
-  if (existingTheme) {
-    // Update existing theme
-    return prisma.themeSettings.update({
-      where: { id: existingTheme.id },
-      data
+  // For org defaults (null projectId), we need to use findFirst + create/update pattern
+  // because upsert doesn't work with null in compound keys
+  if (!projectId) {
+    const existing = await prisma.themeSettings.findFirst({
+      where: { orgId, projectId: null }
     });
-  } else {
-    // Create new theme
+    
+    if (existing) {
+      return prisma.themeSettings.update({
+        where: { id: existing.id },
+        data
+      });
+    }
+    
     return prisma.themeSettings.create({
       data: {
         orgId,
-        projectId: projectId || null,
+        projectId: null,
         ...data
       }
     });
   }
+  
+  // For project-specific themes, upsert works fine
+  return prisma.themeSettings.upsert({
+    where: {
+      orgId_projectId: {
+        orgId,
+        projectId
+      }
+    },
+    create: {
+      orgId,
+      projectId,
+      ...data
+    },
+    update: data
+  });
 };
 
 // --- User Preferences Repository ---
@@ -323,8 +340,8 @@ export const createTaskHistory = async (
       userId,
       action,
       fieldName,
-      oldValue: oldValue !== undefined ? oldValue : undefined,
-      newValue: newValue !== undefined ? newValue : undefined
+      oldValue: oldValue ? JSON.stringify(oldValue) : null,
+      newValue: newValue ? JSON.stringify(newValue) : null
     }
   });
 };
@@ -342,19 +359,20 @@ export const getResourceCapacity = async (
     include: {
       taskResources: {
         include: {
-          task: true
+          task: {
+            where: {
+              AND: [
+                { startDate: { lte: endDate } },
+                { endDate: { gte: startDate } }
+              ]
+            }
+          }
         }
       }
     }
   });
   
-  // Filter task resources to only include tasks within the date range
-  return people.map(person => ({
-    ...person,
-    taskResources: person.taskResources.filter(tr => 
-      tr.task.startDate <= endDate && tr.task.endDate >= startDate
-    )
-  }));
+  return people;
 };
 
 export const getPersonUtilization = async (
@@ -383,7 +401,6 @@ export const getPersonUtilization = async (
   
   return taskResources;
 };
-
 
 
 

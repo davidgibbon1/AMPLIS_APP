@@ -12,6 +12,8 @@ export const createDeliverableSchema = z.object({
   budgetHours: z.number().min(0).optional(),
   budgetCost: z.number().min(0).optional(),
   status: z.nativeEnum(DeliverableStatus).optional(),
+  colour: z.string().optional(),
+  sortOrder: z.number().optional(),
 });
 
 export const updateDeliverableSchema = createDeliverableSchema.partial().extend({

@@ -37,7 +37,7 @@ export const listTasks = async (projectId: string): Promise<TaskWithResources[]>
     costActual: task.costActual.toNumber(),
     colour: task.colour,
     sortOrder: task.sortOrder,
-    dependsOn: Array.isArray(task.dependsOn) ? task.dependsOn as string[] : [],
+    dependsOn: task.dependsOn ? JSON.parse(task.dependsOn as string) : [],
     deliverableId: task.deliverableId,
     projectId: task.projectId,
     resources: task.resources.map(r => ({
@@ -63,7 +63,7 @@ export const getTask = async (taskId: string) => {
     actualHours: task.actualHours.toNumber(),
     costEstimated: task.costEstimated.toNumber(),
     costActual: task.costActual.toNumber(),
-    dependsOn: Array.isArray(task.dependsOn) ? task.dependsOn as string[] : [],
+    dependsOn: task.dependsOn ? JSON.parse(task.dependsOn as string) : [],
     resources: task.resources.map(r => ({
       id: r.id,
       personId: r.personId,
@@ -454,22 +454,23 @@ export const getPersonUtilization = async (
 // --- Full Gantt View Service ---
 
 export const getGanttFullView = async (orgId: string, projectId: string): Promise<GanttFullView> => {
-  // Get project with deliverables
-  const project = await prisma.project.findFirst({
-    where: { id: projectId, orgId },
-    include: {
-      deliverables: {
-        orderBy: { createdAt: 'asc' }
+  // Run all queries in parallel for better performance
+  const [project, tasks, theme] = await Promise.all([
+    prisma.project.findFirst({
+      where: { id: projectId, orgId },
+      include: {
+        deliverables: {
+          orderBy: { createdAt: 'asc' }
+        }
       }
-    }
-  });
+    }),
+    listTasks(projectId),
+    getThemeSettings(orgId, projectId)
+  ]);
   
   if (!project) {
     throw new Error('Project not found');
   }
-  
-  // Get all tasks for this project
-  const tasks = await listTasks(projectId);
   
   // Group tasks by deliverable
   const tasksByDeliverable = tasks.reduce((acc, task) => {
@@ -479,9 +480,6 @@ export const getGanttFullView = async (orgId: string, projectId: string): Promis
     acc[task.deliverableId].push(task);
     return acc;
   }, {} as Record<string, TaskWithResources[]>);
-  
-  // Get theme
-  const theme = await getThemeSettings(orgId, projectId);
   
   return {
     project: {
@@ -532,7 +530,6 @@ async function recalculateTaskCost(taskId: string) {
     }
   });
 }
-
 
 
 

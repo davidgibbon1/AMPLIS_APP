@@ -29,4 +29,16 @@ export const deliverableRouter = router({
         status: input.status
       });
     }),
+  
+  updateColour: protectedProcedure
+    .input(z.object({
+      id: z.string(),
+      colour: z.string()
+    }))
+    .mutation(async ({ input }) => {
+      return repo.updateDeliverable(input.id, {
+        id: input.id,
+        colour: input.colour
+      });
+    }),
 });

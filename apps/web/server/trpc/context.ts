@@ -4,35 +4,20 @@ import { prisma } from '@/lib/db/client';
 import type { Role } from '@prisma/client';
 
 export async function createContext(opts?: FetchCreateContextFnOptions) {
-  console.log('🔧 [CONTEXT] Creating tRPC context...')
   const supabase = createClient();
   
   // Get authenticated user from Supabase
-  console.log('🔧 [CONTEXT] Fetching user from Supabase...')
   const { data: { user }, error } = await supabase.auth.getUser();
   
-  if (error) {
-    console.error('🔧 [CONTEXT] ❌ Error fetching user:', error)
+  if (error || !user) {
     return {
       user: null,
       org: null,
       headers: opts?.req.headers,
     };
   }
-  
-  if (!user) {
-    console.log('🔧 [CONTEXT] ℹ️ No authenticated user')
-    return {
-      user: null,
-      org: null,
-      headers: opts?.req.headers,
-    };
-  }
-
-  console.log('🔧 [CONTEXT] ✓ User authenticated:', user.id, user.email)
 
   // Get user's org memberships from database
-  console.log('🔧 [CONTEXT] Querying user org memberships from database...')
   try {
     const userOrgRoles = await prisma.userOrgRole.findMany({
       where: { userId: user.id },
@@ -42,19 +27,8 @@ export async function createContext(opts?: FetchCreateContextFnOptions) {
       orderBy: { createdAt: 'asc' },
     });
 
-    console.log('🔧 [CONTEXT] ✓ Found', userOrgRoles.length, 'org memberships')
-    userOrgRoles.forEach((uor, i) => {
-      console.log(`🔧 [CONTEXT]   ${i + 1}. Org: ${uor.org.name} (${uor.orgId}), Role: ${uor.role}`)
-    })
-
     // Default to first org (in a real app, you'd have org selection logic)
     const currentOrgRole = userOrgRoles[0];
-    
-    if (currentOrgRole) {
-      console.log('🔧 [CONTEXT] ✓ Using org:', currentOrgRole.org.name)
-    } else {
-      console.log('🔧 [CONTEXT] ⚠️ User has no org memberships')
-    }
     
     return {
       user: {
@@ -75,10 +49,6 @@ export async function createContext(opts?: FetchCreateContextFnOptions) {
       headers: opts?.req.headers,
     };
   } catch (dbError) {
-    console.error('🔧 [CONTEXT] ❌ Database query error:', dbError)
-    console.error('🔧 [CONTEXT] Error details:', dbError instanceof Error ? dbError.message : 'Unknown error')
-    console.error('🔧 [CONTEXT] Error stack:', dbError instanceof Error ? dbError.stack : 'No stack trace')
-    
     // Return context with user but no org on DB error
     return {
       user: {

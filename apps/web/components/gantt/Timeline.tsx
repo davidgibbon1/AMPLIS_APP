@@ -63,4 +63,3 @@ export function Timeline({ startDate, endDate, zoomLevel, width }: TimelineProps
 
 
 
-

@@ -14,10 +14,10 @@ const handler = async (req: Request) => {
   
   try {
     const response = await fetchRequestHandler({
-      endpoint: '/api/trpc',
-      req,
-      router: appRouter,
-      createContext,
+    endpoint: '/api/trpc',
+    req,
+    router: appRouter,
+    createContext,
       onError: ({ path, error }) => {
         console.error('❌ [TRPC] Error on path:', path);
         console.error('❌ [TRPC] Error details:', error);

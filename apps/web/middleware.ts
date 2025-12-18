@@ -15,9 +15,26 @@ const protectedRoutes = [
 // Define auth routes that should redirect to app if already logged in
 const authRoutes = ['/auth/login', '/auth/register']
 
+// Routes that should ALWAYS be accessible (password reset, callback, etc.)
+const publicAuthRoutes = [
+  '/auth/reset-password',
+  '/auth/forgot-password', 
+  '/auth/callback',
+  '/auth/mfa',
+]
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   console.log('🛡️ [MIDDLEWARE] Request to:', pathname)
+
+  // Always allow public auth routes (reset password, callback, etc.)
+  const isPublicAuthRoute = publicAuthRoutes.some((route) => pathname.startsWith(route))
+  if (isPublicAuthRoute) {
+    console.log('🛡️ [MIDDLEWARE] ✓ Public auth route, allowing access:', pathname)
+    // Still update the session for these routes
+    const { response } = await updateSession(request)
+    return response
+  }
 
   // First, update the session (refresh tokens if needed)
   console.log('🛡️ [MIDDLEWARE] Updating session...')
@@ -37,7 +54,7 @@ export async function middleware(request: NextRequest) {
   )
   console.log('🛡️ [MIDDLEWARE] Is protected route:', isProtectedRoute)
 
-  // Check if the current path is an auth route
+  // Check if the current path is an auth route (login/register)
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
   console.log('🛡️ [MIDDLEWARE] Is auth route:', isAuthRoute)
 

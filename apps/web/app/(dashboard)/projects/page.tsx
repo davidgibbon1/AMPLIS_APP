@@ -18,24 +18,12 @@ export default function ProjectsPage() {
     ? rawData.json 
     : rawData;
   
-  // Enhanced debug logging
-  console.log('=== PROJECT PAGE DEBUG ===');
-  console.log('Raw data:', rawData);
-  console.log('Projects (processed):', projects);
-  console.log('Projects isArray:', Array.isArray(projects));
-  console.log('Projects length:', Array.isArray(projects) ? projects.length : 'N/A');
-  console.log('Is loading:', isLoading);
-  console.log('Error:', error);
-  console.log('========================');
-  
   const createProject = trpc.project.create.useMutation({
     onSuccess: (rawData) => {
-      console.log('✅ Create mutation success, raw data:', rawData);
       // Unwrap tRPC batching format if present
       const data = rawData && typeof rawData === 'object' && 'json' in rawData 
         ? rawData.json 
         : rawData;
-      console.log('✅ Unwrapped data:', data);
       toast.success(`Project "${data.name}" created successfully!`);
       setShowCreate(false);
       setNewProjectName('');
@@ -43,7 +31,6 @@ export default function ProjectsPage() {
       refetch();
     },
     onError: (error) => {
-      console.error('❌ Create mutation error:', error);
       toast.error(`Failed to create project: ${error.message}`);
     },
   });
@@ -61,7 +48,6 @@ export default function ProjectsPage() {
       deliverables: [],
     };
     
-    console.log('🚀 Sending project create request:', projectData);
     createProject.mutate(projectData);
   };
 

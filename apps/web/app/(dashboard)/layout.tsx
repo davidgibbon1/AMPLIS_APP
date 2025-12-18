@@ -28,7 +28,7 @@ export default function DashboardLayout({
   return (
     <>
       <Toaster position="top-right" richColors />
-      <div className="flex h-screen overflow-hidden bg-slate-50">
+    <div className="flex h-screen overflow-hidden bg-slate-50">
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r flex flex-col">
         <div className="h-14 flex items-center px-6 border-b font-bold text-lg">

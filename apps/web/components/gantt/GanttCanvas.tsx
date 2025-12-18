@@ -223,4 +223,3 @@ export function GanttCanvas({ projectId, data, onTaskUpdate }: GanttCanvasProps)
 
 
 
-

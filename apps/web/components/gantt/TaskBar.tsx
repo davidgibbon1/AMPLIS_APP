@@ -249,4 +249,3 @@ export function TaskBar({ task, rowIndex, onMove, onResize, onClick }: TaskBarPr
 
 
 
-

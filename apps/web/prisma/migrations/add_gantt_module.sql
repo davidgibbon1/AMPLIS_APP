@@ -136,4 +136,3 @@ COMMENT ON TABLE "UserPreferences" IS 'User-specific Gantt view preferences';
 
 
 
-

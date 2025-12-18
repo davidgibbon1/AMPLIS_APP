@@ -585,6 +585,74 @@ export async function updateEmailAction(newEmail: string): Promise<ActionResult>
   }
 }
 
+// Forgot Password - Send Reset Email
+export async function forgotPasswordAction(email: string): Promise<ActionResult> {
+  try {
+    if (!z.string().email().safeParse(email).success) {
+      return { success: false, error: 'Please enter a valid email address' }
+    }
+
+    const supabase = createClient()
+    
+    // Get the app URL - use env var or fallback to localhost
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const redirectUrl = `${appUrl}/auth/reset-password`
+    
+    console.log('🔐 [FORGOT_PASSWORD] Sending reset email to:', email)
+    console.log('🔐 [FORGOT_PASSWORD] Redirect URL:', redirectUrl)
+    
+    // Use the reset-password page directly - Supabase will add tokens to URL hash
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: redirectUrl,
+    })
+
+    if (error) {
+      console.error('🔐 [FORGOT_PASSWORD] Password reset error:', error)
+      // Don't reveal if email exists or not for security
+      return { success: true, data: undefined }
+    }
+
+    console.log('🔐 [FORGOT_PASSWORD] Reset email sent successfully')
+    return { success: true, data: undefined }
+  } catch (error) {
+    console.error('Forgot password error:', error)
+    return { success: false, error: 'Failed to send reset email. Please try again.' }
+  }
+}
+
+// Reset Password - Update to New Password (after clicking email link)
+export async function resetPasswordAction(newPassword: string): Promise<ActionResult> {
+  try {
+    const passwordValidation = z
+      .string()
+      .min(12, 'Password must be at least 12 characters')
+      .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+      .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+      .regex(/[0-9]/, 'Password must contain at least one digit')
+      .safeParse(newPassword)
+
+    if (!passwordValidation.success) {
+      return { success: false, error: passwordValidation.error.errors[0].message }
+    }
+
+    const supabase = createClient()
+    
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    })
+
+    if (error) {
+      console.error('Password reset error:', error)
+      return { success: false, error: 'Failed to reset password. The link may have expired.' }
+    }
+
+    return { success: true, data: undefined }
+  } catch (error) {
+    console.error('Reset password error:', error)
+    return { success: false, error: 'Failed to reset password. Please try again.' }
+  }
+}
+
 // Update password
 const passwordSchema = z.object({
   currentPassword: z.string().min(1, 'Current password is required'),

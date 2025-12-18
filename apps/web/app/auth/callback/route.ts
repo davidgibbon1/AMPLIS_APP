@@ -9,6 +9,14 @@ export async function GET(request: NextRequest) {
   const next = requestUrl.searchParams.get('next') || '/projects'
   const error = requestUrl.searchParams.get('error')
   const errorDescription = requestUrl.searchParams.get('error_description')
+  const type = requestUrl.searchParams.get('type')
+
+  console.log('🔐 [CALLBACK] Auth callback received:', { 
+    hasCode: !!code, 
+    type, 
+    next, 
+    error 
+  })
 
   // Handle OAuth errors
   if (error) {
@@ -25,6 +33,18 @@ export async function GET(request: NextRequest) {
     const supabase = createClient()
     
     const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+    
+    // Handle password recovery - redirect to reset-password page after exchanging code
+    if (type === 'recovery') {
+      console.log('🔐 [CALLBACK] Password recovery - code exchanged, redirecting to reset-password')
+      if (exchangeError) {
+        console.error('🔐 [CALLBACK] Recovery code exchange error:', exchangeError)
+        return NextResponse.redirect(
+          `${requestUrl.origin}/auth/forgot-password?error=expired`
+        )
+      }
+      return NextResponse.redirect(`${requestUrl.origin}/auth/reset-password`)
+    }
 
     if (exchangeError) {
       console.error('Code exchange error:', exchangeError)
